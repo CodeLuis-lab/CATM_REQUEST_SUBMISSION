@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CATM Capacity Review Request</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url('https://files.123freevectors.com/wp-content/original/131210-dark-blue-geometric-polygon-background-vector.jpg'); /* Replace with the path to your image */
+        background-size: cover;
+        background-position: center;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 1200px;
+        width: 100%;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 24px;
+    }
+    form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .form-group {
+        width: 48%;
+        margin-bottom: 10px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .form-group textarea {
+        resize: vertical;
+    }
+    .form-group.full-width {
+        width: 100%;
+    }
+    .submit-button {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    .submit-button input {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .submit-button input:hover {
+        background-color: #0056b3;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>CATM Capacity Review Request</h1>
+        <form id="capacity-form" onsubmit="submitForm(event)">
+            <div class="form-group">
+                <label for="name">Enter your name:</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="attuid">ATTUID:</label>
+                <input type="text" id="attuid" name="attuid">
+            </div>
+            <div class="form-group">
+                <label for="date">Today's Date:</label>
+                <input type="date" id="date" name="date">
+            </div>
+            <div class="form-group">
+                <label for="email">Insert the email address of the person you would like to send this request to:</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="account-name">Account Name:</label>
+                <input type="text" id="account-name" name="account-name">
+            </div>
+            <div class="form-group">
+                <label for="market">Market/Cluster/Location:</label>
+                <input type="text" id="market" name="market">
+            </div>
+            <div class="form-group">
+                <label for="activation-date">Activation Date:</label>
+                <input type="date" id="activation-date" name="activation-date">
+            </div>
+            <div class="form-group">
+                <label for="device-type">Device Type:</label>
+                <input type="text" id="device-type" name="device-type">
+            </div>
+            <div class="form-group">
+                <label for="device-model">Device Model:</label>
+                <input type="text" id="device-model" name="device-model">
+            </div>
+            <div class="form-group full-width">
+                <label for="device-description">Device Descriptions:</label>
+                <textarea id="device-description" name="device-description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="network">Supported Network/Technology:</label>
+                <select id="network" name="network">
+                    <option value="CAT-M">CAT-M</option>
+                    <option value="CAT-1">CAT-1</option>
+                    <option value="NB-IOT">NB-IOT</option>
+                    <option value="Legacy LTE">Legacy LTE</option>
+                    <option value="5G">5G</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="device-software" title="Additional information only to log/monitor sw version.">Device Software:</label>
+                <input type="text" id="device-software" name="device-software">
+            </div>
+            <div class="form-group">
+                <label for="firmware">Firmware:</label>
+                <input type="text" id="firmware" name="firmware">
+            </div>
+            <div class="form-group">
+                <label for="updated-software" title="Need to ensure no device issues/bugs. Latest SW should be used.">Updated Software/Firmware:</label>
+                <select id="updated-software" name="updated-software">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="form-group full-width">
+                <label for="additional-info" title="Detailed Device activities/procedures needing network connection.">Additional Information:</label>
+                <textarea id="additional-info" name="additional-info"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="total-nodes">Total number of Nodes/Devices:</label>
+                <input type="number" id="total-nodes" name="total-nodes">
+            </div>
+            <div class="form-group">
+                <label for="connect-same-time" title="Do all devices (specified above) connect to network at the same time?">All Devices will connect at the same time?:</label>
+                <select id="connect-same-time" name="connect-same-time">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="num-groups" title="A GROUP is a set with number of devices that were planned to ping//connect to the network simultaneously.">Number of GROUPs:</label>
+                <input type="number" id="num-groups" name="num-groups">
+            </div>
+            <div class="form-group">
+                <label for="devices-per-group" title="Number of devices programmed to connect or ping the network simultaneously.">Number of Devices per GROUP:</label>
+                <input type="number" id="devices-per-group" name="devices-per-group">
+            </div>
+            <div class="form-group">
+                <label for="geo-plan" title="Grouping Provided: each device has assigned group. Group Number column on Node Location file should be provided.
+                Spread-out: simultaneous devices are spreadout (not within close vicinity). Max of 50% devices within same serving cell will connect  simultaneously.
+                Random/Unknown: Worst case scenario will be considered. 100% of the devices within same serving cell will connect simultaneously. 
+                ">Simultaneous Devices' Geographical Plan:</label>
+                <select id="geo-plan" name="geo-plan">
+                    <option value="grouping provided">Grouping Provided</option>
+                    <option value="spread-out">Spread-out</option>
+                    <option value="random">Random/Unknown</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ping-interval" title="If not provided, will use Timer Inactivity Timer = 4s or 0.067 minutes">Max Ping/Session Interval Time (sec):</label>
+                <input type="number" id="ping-interval" name="ping-interval">
+            </div>
+            <div class="form-group">
+                <label for="sessions-4s" title="Usually set to 1 unless there would be multiple sessions will happen within 4s (Inactivity Timer)">Number of Session/s within 4s:</label>
+                <input type="number" id="sessions-4s" name="sessions-4s">
+            </div>
+            <div class="form-group">
+                <label for="spread-time" title="Time when the next Group of devices will connect.">Spread Connection Time (minutes):</label>
+                <input type="number" id="spread-time" name="spread-time">
+            </div>
+            <div class="form-group">
+                <label for="completion-time" title="Total time consumed for ALL the devices to complete reporting. If not provided, will use Wake-up Time.">Total Devices Completion Time (minutes):</label>
+                <input type="number" id="completion-time" name="completion-time">
+            </div>
+            <div class="form-group">
+                <label for="reporting-time" title="Wake-up Time is the duration of for all the devices to start on the next round.
+                If devices were programmed to wakeup every once 1 day. Then put 24*60 = 1440min">Reporting Period/wake up time (minutes):</label>
+                <input type="number" id="reporting-time" name="reporting-time">
+            </div>
+            <div class="form-group">
+                <label for="packet-size">File/Packet size being transmitted (bytes):</label>
+                <input type="number" id="packet-size" name="packet-size">
+            </div>
+            <div class="form-group">
+                <label for="nodes-spacing" title="in between spacing of the devices or provide Lat-Long information.">Nodes Spacing (ft):</label>
+                <input type="number" id="nodes-spacing" name="nodes-spacing">
+            </div>
+            <div class="form-group">
+                <label for="node-locations" title="Refer to Node Location tab. 
+                If not much info available, atleast provide the worst case scenario (locations with most number of devices)">Per Node locations:</label>
+                <select id="node-locations" name="node-locations">
+                    <option value="fill up'Node Locations' tab">Fill Up'Node Locations' tab</option>
+                    <option value="Already provided on the Node Location tab">Already provided on the Node Location tab</option>
+                    <option value="No Info yet">No Info yet</option>
+                </select>
+            </div>
+            <div class="form-group full-width">
+                <label for="connection-settings">Device Connection Settings:</label>
+                <textarea id="connection-settings" name="connection-settings"></textarea>
+            </div>
+            <div class="submit-button">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+    <script>
+        async function submitForm(event) {
+            event.preventDefault();
+            const form = document.getElementById('capacity-form');
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+    
+            // Convert form data to an array
+            const values = [
+                data['name'],
+                new Date().toISOString().split('T')[0], // Submission Date
+                data['account-name'],
+                data['market'],
+                data['activation-date'],
+                data['device-type'],
+                data['device-model'],
+                data['device-description'],
+                data['network'],
+                data['device-software'],
+                data['firmware'],
+                data['updated-software'],
+                data['additional-info'],
+                data['total-nodes'],
+                data['connect-same-time'],
+                data['num-groups'],
+                data['devices-per-group'],
+                data['geo-plan'],
+                data['ping-interval'],
+                data['spread-time'],
+                data['completion-time'],
+                data['reporting-time'],
+                data['packet-size'],
+                data['sessions-4s'],
+                data['nodes-spacing'],
+                data['node-locations'],
+                data['connection-settings'],
+                data['name'], // Prepared by
+                '', // RAN contact
+                '', // Sales contact
+                '' // Manufacturer contact
+            ];
+    
+            try {
+                const fileHandle = await window.showOpenFilePicker({
+                    types: [{ description: 'Excel Files', accept: { 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'] } }]
+                });
+                const file = await fileHandle[0].getFile();
+                const arrayBuffer = await file.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    
+                // Append new data to the worksheet
+                const sheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                sheetData.push(values);
+                XLSX.utils.sheet_add_aoa(worksheet, [values], { origin: -1 });
+    
+                // Create a new file and write the updated workbook
+                const writable = await fileHandle[0].createWritable();
+                const updatedExcel = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+                await writable.write(updatedExcel);
+                await writable.close();
+    
+                alert('Form submitted successfully and data saved to Excel file!');
+            } catch (error) {
+                console.error('Error reading or updating the Excel file:', error);
+                alert('There was an error while saving the form data to the Excel file.');
+            }
+        }
+    </script>
+    </body>
+    </html>
